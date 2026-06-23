@@ -40,6 +40,7 @@ final class TournamentForm:
       berserkable = forClas.not.some,
       streakable = forClas.not.some,
       description = none,
+      payouts = none,
       hasChat = forClas.not.some
     )
 
@@ -63,6 +64,7 @@ final class TournamentForm:
       berserkable = tour.berserkable.some,
       streakable = tour.streakable.some,
       description = tour.description,
+      payouts = tour.payouts,
       hasChat = tour.hasChat.some
     )
 
@@ -113,6 +115,7 @@ final class TournamentForm:
       "berserkable" -> optional(boolean),
       "streakable" -> optional(boolean),
       "description" -> optional(cleanNonEmptyText),
+      "payouts" -> (if manager then optional(cleanNonEmptyText) else ignored(none)),
       "hasChat" -> optional(boolean)
     )(TournamentSetup.apply)(unapply)
       .verifying("Invalid clock", _.validClock(prev))
@@ -176,6 +179,7 @@ private[tournament] case class TournamentSetup(
     berserkable: Option[Boolean],
     streakable: Option[Boolean],
     description: Option[String],
+    payouts: Option[String],
     hasChat: Option[Boolean]
 ):
   def validClock(prev: Option[Tournament]) =
@@ -244,6 +248,7 @@ private[tournament] case class TournamentSetup(
         noStreak = !(~streakable),
         teamBattle = old.teamBattle,
         description = description,
+        payouts = payouts,
         hasChat = hasChat | true
       )
 
@@ -268,6 +273,7 @@ private[tournament] case class TournamentSetup(
         noStreak = streakable.fold(old.noStreak)(!_),
         teamBattle = old.teamBattle,
         description = description.fold(old.description)(_.nonEmptyOption),
+        payouts = payouts.fold(old.payouts)(_.nonEmptyOption),
         hasChat = hasChat | old.hasChat
       )
 
