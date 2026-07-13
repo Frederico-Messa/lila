@@ -71,6 +71,10 @@
 
   .form-actions {
     gap: 1em;
+
+    button[name='close'] {
+      display: none;
+    }
   }
 
   .marked-by-me {
